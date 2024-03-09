@@ -1,0 +1,7 @@
+ul.grid li:hover {
+    background-color: #4a5568; /* Slate 600 color */
+  }
+
+  ul.grid li {
+    padding: 0.5rem; /* Equivalent to Tailwind p-2 */
+  }

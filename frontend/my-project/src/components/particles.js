@@ -14,7 +14,7 @@ export const particleConfig = {
   "defaultThemes": {},
   "delay": 0,
   "fullScreen": {
-    "enable": false,
+    "enable": true,
     "zIndex": -10
   },
   "detectRetina": true,

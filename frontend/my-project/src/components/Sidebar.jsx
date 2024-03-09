@@ -17,8 +17,6 @@ const Sidebar = () => {
         >
           <path d="M3 12h18M3 6h18M3 18h18" />
         </svg>
-
-        <p className="mb-2">💎</p>
       </SheetTrigger>
       <SheetContent
         side={"left"}

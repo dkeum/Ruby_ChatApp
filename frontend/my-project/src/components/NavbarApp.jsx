@@ -2,25 +2,35 @@ import {
   NavigationMenu,
   NavigationMenuContent,
   NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
   //   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import Sidebar from "./Sidebar";
 import { Link } from "react-router-dom";
+import { Notification } from "./Notification";
+import { Email } from "./Email";
 
 const NavbarApp = () => {
   return (
     <div className="flex flex-row justify-between w-screen bg-slate-900">
       <div className="flex flex-row text-white ml-20 ">
         <Sidebar />
+
+        <Link to="/">
+          <p className="text-3xl ml-10 mb-5 flex h-full items-center">💎 Ruby Chat</p>
+        </Link>
       </div>
 
       <div className="flex flex-row gap-x-5 text-2xl items-center mr-[10rem]">
-        <div className=" hover:bg-slate-700 p-5 ">🔔</div>
+        <div className=" hover:bg-slate-700 p-5 ">
 
-        <div className=" hover:bg-slate-700 p-5">📧</div>
+            <Notification  title={"🔔"}/>
+        </div>
+
+        <div className=" hover:bg-slate-700 p-5">
+            <Email title={"📧"}/>
+        </div>
 
         <div className="w-full h-full bg-slate-900 flex items-center ">
           <NavigationMenu className="flex flex-row justify-between">
@@ -32,13 +42,21 @@ const NavbarApp = () => {
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>
                     <ul className="grid gap-3 p-4 w-[230px] lg:grid-cols-[.75fr_1fr] bg-slate-700 text-white font-semibold">
-                      <li className="text-yellow-300" href="/docs" title="Introduction">
+                      <li
+                        className="text-yellow-300"
+                        href="/docs"
+                        title="Introduction"
+                      >
                         Ruby Premium
                       </li>
-                      <li className="text-yellow-300" href="/docs/installation" title="Installation">
+                      <li
+                        className="text-yellow-300"
+                        href="/docs/installation"
+                        title="Installation"
+                      >
                         Buy Karma
                       </li>
-                      <li  href="/docs/primitives/typography" title="Typography">
+                      <li href="/docs/primitives/typography" title="Typography">
                         my Profile
                       </li>
                       <li href="/docs/primitives/typography" title="Typography">
@@ -60,10 +78,9 @@ const NavbarApp = () => {
                         Donate
                       </li>
                       <li href="/docs/primitives/typography" title="Typography">
-                       Log Out
+                        Log Out
                       </li>
                     </ul>
-           
                   </NavigationMenuContent>
                 </NavigationMenuItem>
               </div>

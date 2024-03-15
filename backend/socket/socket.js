@@ -7,7 +7,10 @@ const { Server } = require("socket.io");
 const { corsOptions } = require("../config/corsOptions");
 
 const io = new Server(server, {
-  cors: corsOptions,
+  cors:{
+    origin: 'http://localhost:5173', // Allow requests only from port 5173
+    credentials: false, // Allow sending cookies
+  },
 });
 
 const getReceiverSocketId = (receiverId) => {

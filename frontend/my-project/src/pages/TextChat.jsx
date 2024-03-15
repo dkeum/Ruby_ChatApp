@@ -1,8 +1,13 @@
-
+import ChatLayOut from "@/components/Chat/ChatLayOut"
+import NavbarApp from "@/components/NavbarApp"
 
 const TextChat = () => {
   return (
-    <div>TextChat</div>
+    <div>
+
+      <NavbarApp/>
+      <ChatLayOut/>
+    </div>
   )
 }
 

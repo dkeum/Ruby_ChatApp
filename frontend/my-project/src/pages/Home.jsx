@@ -79,7 +79,6 @@ const Home = () => {
 
       <div ref={featureRef} />
       <Features
-        ref={featureRef}
         FeatureList={featuresList1}
         backgroundColor={"bg-white"}
         title={"Features"}

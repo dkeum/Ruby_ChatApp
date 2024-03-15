@@ -7,16 +7,19 @@ const Dashboard = () => {
       title: "1 on 1 Text Chat",
       description: "Ruby will match you to a 1 on 1 text chat",
       emoji: "📱",
+      link: "/textchat"
     },
     {
       title: "Video Chat",
       description: "Ruby will match you to a video chat",
       emoji: "🎥",
+      link: "/videochat",
     },
     {
       title: "Group Text Chat",
       description: "Match with a random group of people on Ruby",
       emoji: "💬",
+      link: "/groupchat",
     },
   ];
 

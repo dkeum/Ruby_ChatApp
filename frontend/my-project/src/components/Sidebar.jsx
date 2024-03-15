@@ -1,4 +1,6 @@
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Link } from "react-router-dom";
+import { SearchModal } from "./SearchModal";
 
 const Sidebar = () => {
   return (
@@ -18,15 +20,29 @@ const Sidebar = () => {
           <path d="M3 12h18M3 6h18M3 18h18" />
         </svg>
       </SheetTrigger>
-      <SheetContent
-        side={"left"}
-        className="bg-slate-950 flex"
-      >
+      <SheetContent side={"left"} className="bg-slate-950 flex">
         <div className="w-full text-white flex flex-col text-2xl gap-y-5 pt-20 font-semibold">
-          <button className=" flex justify-start pl-20 hover:bg-slate-500"> 📊 Dashboard</button>
-          <button className=" flex justify-start pl-20 hover:bg-slate-500"> 🤝 Meet</button>
-          <button className=" flex justify-start pl-20 hover:bg-slate-500"> 👫 Friends</button>
-          <button className=" flex justify-start pl-20 hover:bg-slate-500"> 🔍 Search</button>
+          <Link to="/settingboard">
+            <button className="w-full flex justify-start pl-20 hover:bg-slate-500">
+              {" "}
+              📊 Dashboard
+            </button>
+          </Link>
+          <Link to="/dashboard">
+            <button className="w-full flex justify-start pl-20 hover:bg-slate-500">
+              {" "}
+              🤝 Meet
+            </button>
+          </Link>
+
+          <button className=" flex justify-start pl-20 hover:bg-slate-500">
+            {" "}
+            👫  <SearchModal title={"Friends"}/>
+          </button>
+          <button className=" flex flex-row items-center justify-start  pl-20 hover:bg-slate-500">
+            {" "}
+            🔍 <SearchModal title={"Search"}/>
+          </button>
         </div>
       </SheetContent>
     </Sheet>

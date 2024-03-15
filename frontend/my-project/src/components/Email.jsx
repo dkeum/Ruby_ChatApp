@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -20,7 +20,7 @@ export function Email({ title }) {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle className="mt-5 mb-2">{title} Inbox</DialogTitle>
+          <DialogTitle className="mb-2">{title} Inbox</DialogTitle>
           <DialogDescription className="flex flex-row gap-x-4">
             <Button onClick={() => setShowUnread(true)}>Unread (0)</Button>
             <Button onClick={() => setShowUnread(false)}>Read (0)</Button>

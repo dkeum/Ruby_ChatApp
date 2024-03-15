@@ -1,7 +1,6 @@
 import {
   Dialog,
   DialogContent,
-  
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -20,11 +19,11 @@ export function Notification({ title }) {
         <DialogHeader>
           <DialogTitle>{title} Notifications</DialogTitle>
         </DialogHeader>
-            <div>
-                <p>You got no Notification</p>
-            </div>
+        <div>
+          <p>You got no Notification</p>
+        </div>
         <DialogFooter>
-        <DialogClose asChild>
+          <DialogClose asChild>
             <Button type="button" variant="secondary">
               Close
             </Button>

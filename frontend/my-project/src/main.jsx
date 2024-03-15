@@ -2,48 +2,37 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
-import { NavContext } from "./providers/NavContext.js";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Dashboard from "./pages/Dashboard.jsx";
 import TextChat from "./pages/TextChat.jsx";
 import VideoChat from "./pages/VideoChat.jsx";
 import GroupChat from "./pages/GroupChat.jsx";
+import Settingboard from "./pages/SettingBoard.jsx";
 
-const router = createBrowserRouter([
-  {
-    path: "/hello",
-    element: <div>Hello world!</div>,
-  },
-  {
-    path: "/",
-    element: <App />,
-  },
-  {
-    path: "/login",
-    element: <App />,
-  },
-  {
-    path: "/dashboard",
-    element: <Dashboard/>,
-  },
-  {
-    path: "/textchat",
-    element: <TextChat />,
-  },
-  {
-    path: "/videochat",
-    element: <VideoChat/>,
-  },
-  {
-    path: "/groupchat",
-    element: <GroupChat/>,
-  },
-]);
+import Login from "./pages/auth/Login.jsx";
+import { CreateAccount } from "./pages/auth/CreateAccount.jsx";
+import { Provider } from "react-redux";
+import { store } from "./app/store.js";
+import { SocketProvider } from "./hooks/useSocket.jsx";
+// import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <NavContext.Provider>
-      <RouterProvider router={router} />
-    </NavContext.Provider>
+    <Provider store={store}>
+      <BrowserRouter>
+          <SocketProvider>
+            <Routes>
+              <Route path="/" element={<App />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/textchat" element={<TextChat />} />
+              <Route path="/videochat" element={<VideoChat />} />
+              <Route path="/groupchat" element={<GroupChat />} />
+              <Route path="/settingboard" element={<Settingboard />} />
+              <Route path="/createaccount" element={<CreateAccount />} />
+            </Routes>
+          </SocketProvider>
+      </BrowserRouter>
+    </Provider>
   </React.StrictMode>
 );

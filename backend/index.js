@@ -1,15 +1,31 @@
-const express= require("express")
-const cors = require("cors");
-const {corOptions} = require("./config/corsOptions")
-
 require('dotenv').config()
-const app = express(corOptions)
+const express = require("express");
 
+const PORT = process.env.PORT || 3000;
+const connectDB = require("./config/connectDb");
+const cookieParser = require("cookie-parser");
+const {app, server } = require('./socket/socket')
+const cors = require("cors") 
+const corsOptions = require("./config/corsOptions")
 
-app.use(cors()); // Enable CORS for all routes
+app.use(cors(corsOptions))
 app.use(express.json())
+app.use(cookieParser())
+
+app.use("/api/auth", require("./routes/authRoute"));
+app.use("/api/message", require("./routes/messageRoute"));
+app.use("/api/user", require("./routes/userRoute"));
 
 
-app.listen(process.env.BACKEND_PORT, ()=>{
-    console.log(`listening on port ${process.env.BACKEND_PORT}`)
-})
+
+// TODOS: 
+// payments with STRIPE, groupchats , VideoChat, teambuilding (Guess the word... other ideas ), arguings, livechatting
+  
+
+
+
+server.listen(PORT, () => {
+    connectDB();
+    console.log(`app is listening on PORT ${PORT}`);
+  });
+

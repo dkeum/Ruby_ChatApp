@@ -14,25 +14,26 @@ import { CreateAccount } from "./pages/auth/CreateAccount.jsx";
 import { Provider } from "react-redux";
 import { store } from "./app/store.js";
 import { SocketProvider } from "./hooks/useSocket.jsx";
+
 // import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Provider store={store}>
-      <BrowserRouter>
-          <SocketProvider>
-            <Routes>
-              <Route path="/" element={<App />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/textchat" element={<TextChat />} />
-              <Route path="/videochat" element={<VideoChat />} />
-              <Route path="/groupchat" element={<GroupChat />} />
-              <Route path="/settingboard" element={<Settingboard />} />
-              <Route path="/createaccount" element={<CreateAccount />} />
-            </Routes>
-          </SocketProvider>
-      </BrowserRouter>
+      <SocketProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<App />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/textchat" element={<TextChat />} />
+            <Route path="/videochat" element={<VideoChat />} />
+            <Route path="/groupchat" element={<GroupChat />} />
+            <Route path="/settingboard" element={<Settingboard />} />
+            <Route path="/createaccount" element={<CreateAccount />} />
+          </Routes>
+        </BrowserRouter>
+      </SocketProvider>
     </Provider>
   </React.StrictMode>
 );

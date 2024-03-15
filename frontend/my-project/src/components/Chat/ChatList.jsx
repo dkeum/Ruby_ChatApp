@@ -5,8 +5,8 @@ import { cn } from "@/lib/utils";
 import useAuth from "@/hooks/useAuth";
 
 const ChatList = ({ messages, sendMessage, socket }) => {
-  const { user } = useAuth();
-  // console.log(messages)
+  const { username: user } = useAuth();
+  // console.log(user)
   const messagesContainerRef = useRef(null);
 
   useEffect(() => {

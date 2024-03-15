@@ -6,7 +6,7 @@ import { Textarea } from "../ui/textarea";
 const ChatBottomBar = ({ sendMessage, socket }) => {
   const [message, setMessage] = useState("");
   const inputRef = useRef(null);
-  const { user } = useAuth();
+  const { username, avatar } = useAuth();
   // const user = useContext(UserContext)
 
   // const handleThumbsUp = () => {
@@ -29,8 +29,8 @@ const ChatBottomBar = ({ sendMessage, socket }) => {
     if (message.trim()) {
       const newMessage = {
         id: message.length + 1,
-        name: user.name,
-        avatar: user.avatar,
+        name: username,
+        avatar: avatar,
         message: message.trim(),
       };
       sendMessage(newMessage);

@@ -8,15 +8,19 @@ export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
 
-  const { user } = useAuth();
+  const { userId } = useAuth();
 
   useEffect(() => {
-    if (user) {
-      const newSocket = io("http://localhost:3000", {
+
+    if (userId) { 
+      const newSocket = io(`${import.meta.env.VITE_BACKEND_URL}`, {
         query: {
-          userId: user._id,
+          userId: userId,
         },
       });
+
+      console.log("new Socket detials")
+      console.log(newSocket)
 
       newSocket.on("connect", () => {
         console.log("WebSocket connection established");
@@ -45,7 +49,7 @@ export const SocketProvider = ({ children }) => {
         setSocket(null);
       }
     }
-  }, [user]);
+  }, [userId]);
 
   const value = useMemo(
     () => ({

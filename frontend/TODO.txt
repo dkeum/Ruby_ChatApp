@@ -1,0 +1,11 @@
+
+Socket Related Tasks 
+
+(1) Instead of Context for Sockets Exchange with Rdux so that authentication token 
+"access token can be used" 
+
+Follow up with setting the serverside credentials be true so that the cookies
+can be sent. 
+
+(2) store some caching information on clientside for persistant socket connections
+

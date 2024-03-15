@@ -7,7 +7,6 @@ export function Chat({ messages, selectedUser }) {
   const { socket } = useSocket();
   const [messagesState, setMessages] = useState(messages);
 
-  
 
   useEffect(() => {
     socket.on("message", (data) => {
@@ -18,7 +17,7 @@ export function Chat({ messages, selectedUser }) {
       } catch (error) {
         console.error("Error parsing message data:", error);
       }
-    });
+    },[]);
 
     let activtyTimer;
     socket.on("activity", (name) => {

@@ -2,12 +2,14 @@
 import  useAuth  from "@/hooks/useAuth";
 import { useState, useRef } from "react";
 import { Textarea } from "../ui/textarea";
+import { useSocket } from "@/hooks/useSocket";
 
-const ChatBottomBar = ({ sendMessage, socket }) => {
+const ChatBottomBar = ({ sendMessage}) => {
   const [message, setMessage] = useState("");
   const inputRef = useRef(null);
   const { username, avatar } = useAuth();
-  // const user = useContext(UserContext)
+  const {socket} = useSocket();
+
 
   // const handleThumbsUp = () => {
   //   const newMessage = {
@@ -22,7 +24,7 @@ const ChatBottomBar = ({ sendMessage, socket }) => {
 
   const handleInputChange = (event) => {
     setMessage(event.target.value);
-    socket.emit('activity', "typing...")
+    socket.emit('activity', username)
   };
 
   const handleSend = () => {

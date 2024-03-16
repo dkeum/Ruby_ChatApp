@@ -2,8 +2,19 @@ import { Avatar, AvatarImage } from "../ui/avatar";
 
 const ChatSideBar = ({ encounteredUser }) => {
 
-  // console.log("encountered user")
+  // console.log("chatside bar")
   // console.log(encounteredUser)
+  if (encounteredUser[0] === null) {
+    return (
+      <div className="w-full h-full">
+        <header className="w-full border-b">
+          <h1 className="text-white text-2xl font-semibold text-center p-2">
+            Encountered Users
+          </h1>
+        </header>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full h-full">

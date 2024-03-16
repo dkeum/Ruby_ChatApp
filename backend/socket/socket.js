@@ -1,153 +1,205 @@
 const express = require("express");
-const http = require('http')
+const http = require("http");
 
 const app = express();
-const server = http.createServer(app)
+const server = http.createServer(app);
 const { Server } = require("socket.io");
-// const { corsOptions } = require("../config/corsOptions");
+
+const {
+  buildMsg,
+  buildMsgWithAvatar,
+  activateUser,
+  userLeavesApp,
+  getUser,
+  getUsersinRoom,
+  getAllActiveRooms,
+} = require("./util/groupchat");
+
+const {
+  textChatactivateUser,
+  textChatuserLeavesApp,
+  textChatgetUser,
+  textChatgetAllActiveRooms,
+  textChatgetReceiverSocketId,
+  textChatUserLeavesRoom,
+  textChatUserRequeue,
+  findTextChatUser,
+  getRandomPerson,
+  createUniqueRoom,
+  updateTextChatUser, // Import the function
+} = require("./util/textchat");
 
 const io = new Server(server, {
-  cors:{
-    origin: 'http://localhost:5173', // Allow requests only from port 5173
+  cors: {
+    origin: "http://localhost:5173", // Allow requests only from port 5173
     credentials: false, // Allow sending cookies
   },
 });
 
-const getReceiverSocketId = (receiverId) => {
-  const user = userSocketMap.users.find(user => user.id === receiverId);
-  if (user) {
-    return user.id;
-  } else {
-    return null; // Return null if the receiver ID is not found
-  }
-};
-const userSocketMap = {
-  user: [],
-  setUsers: function (newUsersArray){
-    this.users = newUsersArray
-  }
-
-}; // {userId: socketId}
-
 io.on("connection", (socket) => {
-
-
   console.log(`${socket.id} is connected`);
 
-  
+  // GROUP CHAT
 
-    socket.on("enterRoom", ({name, room})=>{
-      //leave previous room 
-      const prevRoom = getUser(socket.id)?.room
-      if(prevRoom) {
-        socket.leave(prevRoom)
-        io.to(prevRoom).emit('message', buildMsg('ADMIN', `${name} has left the room`))
-      }
-
-      const user = activateUser(socket.id, name, room)
-      
-      if(prevRoom){
-        io.to(prevRoom).emit('userList',{
-          users:getUsersinRoom(prevRoom)
-        })
-
-        socket.join(user.room)
-
-        //to user who joined
-        socket.emit('message', buildMsg("ADMIN", `You have joined the ${user.room} chat room`))
-
-        //to everyone else
-        socket.broadcast.to(user.room).emit('message', buildMsg("ADMIN", `${user.name} has joined the room`))
-
-        io.to(user.room).emit('userList', {
-          users: getUsersInRoom(user.room)
-        })
-
-        // update room list for everything
-        io.emit('roomlist', {rooms: getAllActiveRooms()})
-    } })
-
-    //small application (for larger we only want to update the user's friendlist)
-    io.emit("getOnlineUsers", Object.keys(userSocketMap));
-  
-    socket.on("message", (data) => {
-      const incomingData = JSON.parse(data);
-      incomingData.time = buildMsg(incomingData.name, incomingData.message)
-      // console.log(incomingData);
-
-      io.emit("message", JSON.stringify(incomingData));
-    });
-  
-    socket.on("disconnect", () => {
-      console.log(`${socket.id} is disconnected`);
-      const user = getUser(socket.id)
-      userLeavesApp(socket.id)
-
-      if(user){
-        io.to(user.room).emit('message', buildMsg("ADMIN", `${user.name} has left the room`))
-        io.to(user,room).emit('userList',{
-          users: getUsersInRoom(user.room)
-        })
-        io.emit('roomList', {
-          rooms:getAllActiveRooms()
-        })
-      }
-    });
-  
-    socket.on("activity", (name) => {
-      console.log(`${socket.id} is ${name}`);
-
-      const room = getUser(socket.id)?.room
-      if(room){
-        io.to(room).emit('activity', name)
-      }
-  
-      socket.broadcast.emit(
-        "activity",
-        JSON.stringify({
-          name: "admin",
-          avatar: "temp",
-          message: "User is typing...",
-        })
+  socket.on("enterRoom", ({ name, room }) => {
+    console.log(`${socket.id} has entered room ${room}`);
+    //leave previous room
+    const prevRoom = getUser(socket.id)?.room;
+    if (prevRoom) {
+      socket.leave(prevRoom);
+      io.to(prevRoom).emit(
+        "message",
+        buildMsg("ADMIN", `${name} has left the room`)
       );
-    });
+    }
+
+    const user = activateUser(socket.id, name, room);
+
+    if (prevRoom) {
+      io.to(prevRoom).emit("userList", {
+        users: getUsersinRoom(prevRoom),
+      });
+
+      socket.join(user.room);
+
+      //to user who joined
+      socket.emit(
+        "message",
+        buildMsg("ADMIN", `You have joined the ${user.room} chat room`)
+      );
+
+      //to everyone else
+      socket.broadcast
+        .to(user.room)
+        .emit("message", buildMsg("ADMIN", `${user.name} has joined the room`));
+
+      io.to(user.room).emit("userList", {
+        users: getUsersinRoom(user.room),
+      });
+
+      // update room list for everything
+      io.emit("roomlist", { rooms: getAllActiveRooms() });
+    }
   });
 
+  socket.on("message", (data) => {
+    const incomingData = JSON.parse(data);
+    console.log(incomingData);
 
-function buildMsg(name, text){
-  return {
-    name,
-    text, 
-    time: new Intl.DateTimeFormat('default', {
-      hour:'numeric',
-      minute:'numeric',
-      second: 'numeric'
-    }).format(new Date())
-  }
-}
+    io.emit(
+      "message",
+      buildMsgWithAvatar(
+        incomingData.name,
+        incomingData.message,
+        incomingData.avatar
+      )
+    );
+  });
 
-function activateUser(id, name, room){
-  const user = {id, name, room}
-  userSocketMap.setUsers([...UsersState.users.filter(user => user.id !== id), user])
-  return user
-}
+  socket.on("disconnect", () => {
+    console.log(`${socket.id} is disconnected`);
+    const user = getUser(socket.id);
+    userLeavesApp(socket.id);
+    textChatuserLeavesApp(socket.id);
 
-function userLeavesApp(id){
-  UsersState.setUsers(
-    userSocketMap.users.filter(user => user.id !== id)
-  )
-}
+    if (user) {
+      io.to(user.room).emit(
+        "message",
+        buildMsg("ADMIN", `${user.name} has left the room`)
+      );
+      io.to(user.room).emit("userList", {
+        users: getUsersinRoom(user.room),
+      });
+      io.emit("roomList", {
+        rooms: getAllActiveRooms(),
+      });
+    }
+  });
 
-function getUser(id){
-  return userSocketMap.users.find(user => user.id === id )
-}
+  socket.on("activity", (name) => {
+    const room = getUser(socket.id)?.room;
+    if (room) {
+      console.log("user is typing...");
+      io.to(room).emit(
+        "activity",
+        JSON.stringify({
+          name: "ADMIN",
+          avatar: "temp",
+          message: `${name} is typing`,
+        })
+      );
+    }
+  });
 
-function getUsersinRoom(id){
-  return userSocketMap.users.find(user => user.room === room )
-}
+  // TEXT CHAT
+  socket.on("enterTextChat", (data) => {
+    const { name , avatar } = data;
+    const room = null
 
-function getAllActiveRooms(){
-  return Array.from(new Set(userSocketMap.users.map(user=>user.room)))
-}
+    // add current user to the textchat array
+    textChatactivateUser(socket, name, avatar, room );
 
-module.exports = {app, server,  getReceiverSocketId }
+    // check who's in the text chat array (not including current user)
+    const receiver = getRandomPerson(socket.id);
+
+    if (receiver) {
+      // create a random unique room
+      const uniqueRoom = createUniqueRoom();
+
+
+      //both the users will join the room 
+      updateTextChatUser(uniqueRoom, socket.id); // Fix here
+      updateTextChatUser(uniqueRoom, receiver.id); // Fix here
+      
+      receiver.socket.join(uniqueRoom)
+      socket.join(uniqueRoom);
+
+      socket.emit(
+        "enterTextChat", JSON.stringify({
+            name: receiver.name , 
+            avatar: receiver.avatar,
+        }));
+
+        receiver.socket.emit("enterTextChat", JSON.stringify({
+            name,
+            avatar 
+        }));
+
+      // socket.emit(
+      //   "message",
+      //   buildMsg("ADMIN", `You have joined the ${uniqueRoom} chat room`)
+      // );
+
+
+    } else {
+      socket.emit("enterTextChat", null);
+    }
+  });
+
+  socket.on("leaveTextChat", (data) => {
+    // get the user
+    const user = textChatgetUser(socket.id)
+    // find the room 
+    const room = user.room
+    // find the person with the same room id
+    const receiver = findTextChatUser(room, socket.id)
+    // set the room to null 
+
+    if(receiver){
+      receiver.room = null
+      receiver.socket.leave()
+    }
+
+    socket.leave(room)
+    /// remove the current person from the textchat array
+    textChatUserLeavesRoom(socket.id)
+  });
+
+  socket.on("requeueTextChat", (data) => {
+    // set the current user socket to room: null
+    updateTextChatUser(null, socket.id)
+  });
+
+});
+
+module.exports = { app, server };
